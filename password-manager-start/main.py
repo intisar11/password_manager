@@ -13,7 +13,7 @@ def save():
     email = entry_2.get()
     passwords = entry_3.get()
     with open("data.txt", "a") as data_file:
-        data_file.write(f"{website} | {email} | {passwords}")
+        data_file.write(f"{website} | {email} | {passwords}\n")
         entry_1.delete(0, END)
         entry_2.delete(0, END)
         entry_3.delete(0, END)
