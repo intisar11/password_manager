@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+import json
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
@@ -33,6 +34,7 @@ def generate_password():
 
 
 
+
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 
 
@@ -41,6 +43,12 @@ def save():
     website = entry_1.get()
     email = entry_2.get()
     passwords = entry_3.get()
+    new_data = {
+        website: {
+        "email": email,
+        "password": passwords
+    }
+    }
 
 
 
@@ -49,17 +57,24 @@ def save():
         messagebox.showinfo(title="Error", message="You can not leave any box empty")
 
     else:
-        is_ok = messagebox.askokcancel(title=website,
-                                   message=f"These are the details entered:\n Email:{email}\nPasswords:{passwords}\is it ok?")
-        if is_ok:
-            with open("data.txt", "a") as data_file:
-                data_file.write(f"{website} | {email} | {passwords}\n")
-                entry_1.delete(0, END)
-                entry_2.delete(0, END)
-                entry_3.delete(0, END)
+        try:
+           with open("data.json", "r") as data_file:
+               data = json.load(data_file)
+
+        except FileNotFoundError:
+           with open("data.json", "w") as data_file:
+            json.dump(new_data, data_file)
+
+        else:
+            data.update(new_data)
+            with open("data.json", "w") as data_file:
+                json.dump(data, data_file, indent=4)
+            entry_1.delete(0, END)
+            entry_2.delete(0, END)
+            entry_3.delete(0, END)
 
 
-# ---------------------------- UI SETUP ------------------------------- #
+# ---------------------------- UI SETUP ----------------------------- #
 
 window = Tk()
 window.title("Password Manager")
